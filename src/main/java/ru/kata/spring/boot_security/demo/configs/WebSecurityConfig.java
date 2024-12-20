@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,11 +26,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/login", "error").permitAll()
+                .antMatchers("/login", "/error").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
                 .and()
-                //добавляем чтоб пост запрос работал
                 .csrf().disable()
                 .formLogin()
                 .loginPage("/login")
@@ -39,14 +44,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
-                .permitAll();
+                .permitAll()
+                .and()
+                .httpBasic();
     }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsServiceImp).
-                passwordEncoder(getPasswordEncoder());
+        auth.userDetailsService(userDetailsServiceImp).passwordEncoder(getPasswordEncoder());
     }
 
     @Bean
