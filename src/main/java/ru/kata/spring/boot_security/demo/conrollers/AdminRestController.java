@@ -18,14 +18,14 @@
 //
 //@Controller
 //@RequestMapping("/admin")
-//public class AdminController {
+//public class AdminRestController {
 //
 //    private final PersonValidator personValidator;
 //    private final RoleService roleService;
 //    private final UserService userService;
 //
 //    @Autowired
-//    public AdminController(PersonValidator personValidator, RoleService roleService, UserService userService) {
+//    public AdminRestController(PersonValidator personValidator, RoleService roleService, UserService userService) {
 //        this.personValidator = personValidator;
 //        this.roleService = roleService;
 //        this.userService = userService;
@@ -84,14 +84,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
-public class AdminController {
+public class AdminRestController {
 
     private final PersonValidator personValidator;
     private final RoleService roleService;
     private final UserService userService;
 
     @Autowired
-    public AdminController(PersonValidator personValidator, RoleService roleService, UserService userService) {
+    public AdminRestController(PersonValidator personValidator, RoleService roleService, UserService userService) {
         this.personValidator = personValidator;
         this.roleService = roleService;
         this.userService = userService;

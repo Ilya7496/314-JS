@@ -20,14 +20,13 @@
 package ru.kata.spring.boot_security.demo.conrollers;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import ru.kata.spring.boot_security.demo.models.User;
 
 @RestController
-public class UserController {
+public class UserRestController {
 
     @RequestMapping("/user")
     public ModelAndView user(@AuthenticationPrincipal User user) {
