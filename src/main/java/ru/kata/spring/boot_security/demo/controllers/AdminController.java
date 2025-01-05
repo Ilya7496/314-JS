@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.conrollers;
+package ru.kata.spring.boot_security.demo.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
