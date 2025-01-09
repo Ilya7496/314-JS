@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -14,10 +14,10 @@
 <body>
 <nav class="navbar navbar-dark bg-dark">
     <div class="d-flex align-items-center w-100">
-        <strong class="text-white mr-3"><span th:text="${#authentication.principal.email}"></span></strong>
+        <strong class="text-white mr-3" id="user-email}"></span></strong>
         <p class="mb-0 text-white mr-3">with roles:</p>
-        <span th:each="role : ${#authentication.authorities}" th:text="${#strings.substring(role.authority, 5)}" class="text-white mr-3"></span>
-        <form th:action="@{/logout}" th:method="POST" class="mb-0 ml-auto">
+        <span id="user-roles" class="text-white mr-3"></span>
+        <form id="logout-form" class="mb-0 ml-auto">
             <input type="submit" value="Logout" class="btn btn-link text-white p-0">
         </form>
     </div>
@@ -33,7 +33,7 @@
         <div class="col-10">
             <!-- Это вкладка ЮЗЕР с навигации -->
             <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                <h1>User information-page</h1>
+                <h1>User panel</h1>
                 <!-- Заголовок -->
                 <nav class="navbar navbar-light bg-light">
                     <a class="navbar-brand mb-0 h1" href="#">About user</a>
@@ -50,16 +50,14 @@
                             <th scope="col">Role</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="user-table-body">
                         <tr>
-                            <td th:text="${user.getId()}">id</td>
-                            <td th:text="${user.getName()}">Name</td>
-                            <td th:text="${user.getLastname()}">Last Name</td>
-                            <td th:text="${user.getAge()}">Age</td>
-                            <td th:text="${user.getEmail()}">Email</td>
-                            <td>
-                            <span th:each="authorities : ${user.getAuthorities()}"
-                                  th:text="${#strings.substring(authorities, 5).replace(']','')} + ' '">Role</span>
+                            <td id="user-id">id</td>
+                            <td id="user-name">Name</td>
+                            <td id="user-lastname">Last Name</td>
+                            <td id="user-age">Age</td>
+                            <td id="user-email">Email</td>
+                            <td id="user-roles">Role</td>
                             </td>
                         </tr>
                         </tbody>
@@ -73,5 +71,29 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    fetch("/api/user")
+.then(response => response.json())
+.then(user => {
+        document.getElementById("user-id").textContent = user.id;
+document.getElementById("user-name").textContent = user.name;
+document.getElementById("user-lastname").textContent = user.lastname;
+document.getElementById("user-age").textContent = user.age;
+document.getElementById("user-email").textContent = user.email;
+        const rolesElement = document.getElementById("user-roles");
+rolesElement.textContent = user.authorities.map(role => role.authority.substring(5)).join(", ");
+    })
+.catch(error => console.error("Error fetching user data:", error));
+
+    document.getElementById("logout-form").addEventListener("submit", function(event) {
+event.preventDefault();
+fetch("/logout", { method: "POST" })
+    .then(() => window.location.href = "/login")
+    .catch(error => console.error("Error logging out:", error));
+    });
+});
+</script>
 </body>
 </html>
